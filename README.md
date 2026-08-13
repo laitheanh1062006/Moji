@@ -1,2 +1,0 @@
-# Moji
-Chat app
