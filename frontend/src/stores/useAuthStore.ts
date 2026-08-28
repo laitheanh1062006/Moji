@@ -2,18 +2,24 @@ import {create} from "zustand";
 import {toast} from "sonner";
 import { authService } from "@/services/authService";
 import type { AuthState } from "@/types/store";
+import { persist } from "zustand/middleware";
+import { useChatStore } from "./useChatStore";
 
 
 
-
-export const useAuthStore = create<AuthState>((set,get) => ({
+export const useAuthStore = create<AuthState>()(
+    persist((set,get) => ({
     accessToken: null,
     user: null,
     loading: false,
 
     setAccessToken: (accessToken: string) => set({accessToken}),
 
-    clearState: () => set({accessToken: null, user: null, loading: false}),
+    clearState: () => {
+        set({accessToken: null, user: null, loading: false});
+        localStorage.clear();
+        useChatStore.getState().reset();
+    },
 
     signUp: async(username, password, email, firstname, lastname) =>{
         try{
@@ -29,11 +35,15 @@ export const useAuthStore = create<AuthState>((set,get) => ({
         try{
             set({loading: true});
 
+            localStorage.clear();
+            useChatStore.getState().reset();
+
             const res = await authService.signIn(username, password);
 
             get().setAccessToken(res.accessToken);
 
             await get().fetchMe();
+            useChatStore.getState().fetchConversations();
 
             toast.success("Sign in successful. Welcome back to Moji!");
         } catch(error){
@@ -89,4 +99,8 @@ export const useAuthStore = create<AuthState>((set,get) => ({
             set({loading: false});
         }
     }
-}))
+}), {
+    name:"auth-storage",
+    partialize: (state) => ({user:state.user}),
+})
+);
