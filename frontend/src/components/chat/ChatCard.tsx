@@ -7,7 +7,7 @@ interface ChatCardProps {
     convoId: string;
     name: string;
     timestamp?: Date;
-    isActive: boolean;'
+    isActive: boolean;
     onSelect: (id:string) => void;
     unreadCount?: number;
     leftSection?: React.ReactNode;
