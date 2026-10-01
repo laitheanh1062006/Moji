@@ -38,6 +38,19 @@ export const chatService = {
     return res.data.message;
   },
 
+  async uploadMessageImage(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await api.post("/messages/upload-image", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data;
+  },
+
   async sendGroupMessage(
     conversationId: string,
     content: string = "",

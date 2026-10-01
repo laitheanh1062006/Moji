@@ -68,14 +68,31 @@ const MessageItem = ({
             message.isOwn ? "items-end" : "items-start"
           )}
         >
-          <Card
-            className={cn(
-              "p-3",
-              message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received"
-            )}
-          >
-            <p className="text-sm leading-relaxed break-words">{message.content}</p>
-          </Card>
+          {message.imgUrl && (
+            <div
+              className={cn(
+                "overflow-hidden rounded-xl max-w-[260px] bg-transparent",
+                message.isOwn ? "shadow-none" : "shadow-none"
+              )}
+            >
+              <img
+                src={message.imgUrl}
+                alt="sent image"
+                className="block w-full h-auto max-h-[320px] object-cover rounded-xl border-0 bg-transparent"
+              />
+            </div>
+          )}
+
+          {message.content && (
+            <Card
+              className={cn(
+                "p-3",
+                message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received"
+              )}
+            >
+              <p className="text-sm leading-relaxed break-words">{message.content}</p>
+            </Card>
+          )}
 
           {/* seen/ delivered */}
           {message.isOwn && message._id === selectedConvo.lastMessage?._id && (

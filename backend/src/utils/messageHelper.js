@@ -1,3 +1,17 @@
+export const validateMessagePayload = ({ content, imgUrl }) => {
+  const normalizedContent = typeof content === "string" ? content.trim() : "";
+  const normalizedImgUrl = typeof imgUrl === "string" ? imgUrl.trim() : "";
+
+  if (!normalizedContent && !normalizedImgUrl) {
+    throw new Error("Message must contain at least one of content or image");
+  }
+
+  return {
+    content: normalizedContent,
+    imgUrl: normalizedImgUrl || undefined,
+  };
+};
+
 export const updateConversationAfterCreateMessage = (
   conversation,
   message,
